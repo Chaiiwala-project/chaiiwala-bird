@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4EC0CA">
+    <meta name="description" content="Flappy Bird - A fun offline game for kids">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Flappy Bird">
+    <title>Flappy Bird</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="menu" class="screen">
+            <h1>🐦 Flappy Bird</h1>
+            <button id="startBtn" class="game-btn">Start Game</button>
+            <button id="fullscreenBtn" class="game-btn">Fullscreen</button>
+            <p class="score-display">High Score: <span id="highScore">0</span></p>
+        </div>
+        <div id="gameOver" class="screen hidden">
+            <h2>Game Over!</h2>
+            <p class="score-display">Score: <span id="finalScore">0</span></p>
+            <p class="score-display">High Score: <span id="gameOverHighScore">0</span></p>
+            <button id="restartBtn" class="game-btn">Play Again</button>
+            <button id="menuBtn" class="game-btn">Main Menu</button>
+        </div>
+        <div id="hud" class="hidden">
+            <div id="score">0</div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+    <script>
+        // Register Service Worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered', reg))
+                    .catch(err => console.log('Service Worker registration failed', err));
+            });
+        }
+
+        // Prompt to install PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('PWA install prompt available');
+        });
+    </script>
+</body>
+</html>
