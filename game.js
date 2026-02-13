@@ -64,7 +64,7 @@ function init() {
     // Load high score from localStorage
     const savedHighScore = localStorage.getItem('flappyBirdHighScore');
     if (savedHighScore) {
-        gameState.highScore = parseInt(savedHighScore);
+        gameState.highScore = parseInt(savedHighScore, 10);
         elements.highScore.textContent = gameState.highScore;
     }
 
