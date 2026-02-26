@@ -1,20 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaiiwala - Flappy Game</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flappy Chaiiwala</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fredoka+One&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css">
-    <script src="game.js" defer></script>
+    <script src="script.js"></script>
 </head>
 <body>
-    
-    <div id="splash-screen">
-        <button class="settings-btn"></button>
-        <div class="button-container">
-            <button class="game-btn">START</button>
-            <button class="game-btn secondary">How To Play</button>
-        </div>
+
+<div id="bg"></div>
+
+<!-- Floating particles -->
+<div class="particle" style="left:10%; animation-duration:8s; animation-delay:0s;">☕</div>
+<div class="particle" style="left:25%; animation-duration:11s; animation-delay:2s;">🍵</div>
+<div class="particle" style="left:50%; animation-duration:9s; animation-delay:4s;">☕</div>
+<div class="particle" style="left:70%; animation-duration:13s; animation-delay:1s;">🫖</div>
+<div class="particle" style="left:85%; animation-duration:10s; animation-delay:6s;">☕</div>
+
+<!-- Start Screen -->
+<div id="start-screen">
+<button class="start-btn" onclick="openCharSelect()">▶ PLAY</button>
+</div>
+
+<!-- Character Selection Overlay -->
+<div id="char-overlay">
+<div class="char-modal">
+    <div class="modal-title">CHOOSE YOUR CHARACTER</div>
+
+    <div class="char-row">
+      <button class="arrow-btn" onclick="prevChar()">◀</button>
+      <div class="char-card">
+        <img id="char-img" src="img/tea.png" alt="Character Image">
+        <div class="char-name" id="char-name">CHAI</div>
+      </div>
+      <button class="arrow-btn" onclick="nextChar()">▶</button>
     </div>
+
+    <div class="dots" id="dots"></div>
+
+    <button class="confirm-btn" onclick="confirmChar()">✔ CONFIRM</button>
+  </div>
+</div>
 </body>
 </html>
