@@ -23,7 +23,7 @@
     imgEl.offsetHeight; // reflow
     imgEl.style.animation = '';
 
-    imgEl.textContent = characters[current].img;
+    imgEl.src = characters[current].img;
     nameEl.textContent = characters[current].name;
 
     document.querySelectorAll('.dot').forEach((d, i) => {
