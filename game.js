@@ -46,8 +46,8 @@ window.onload = function () {
 
   // Load selected character from start screen
   const selectedCharacter = JSON.parse(sessionStorage.getItem('selectedCharacter'));
-  if (selectedCharacter && selectedCharacter.Image) {
-    birdImg.src = selectedCharacter.Image;
+  if (selectedCharacter && selectedCharacter.img) {
+    birdImg.src = selectedCharacter.img;
   }
 
   board = document.getElementById("board");
