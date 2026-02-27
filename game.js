@@ -80,32 +80,64 @@ function update() {
       isNewHighScore = true;
     }
 
-    context.fillStyle = "rgba(0, 0, 0, 0.55)";
+    // Dark overlay
+    context.fillStyle = "rgba(0, 0, 0, 0.6)";
     context.fillRect(0, 0, board.width, board.height);
 
+    // Game Over Modal
+    let modalWidth = Math.min(450, board.width * 0.85);
+    let modalHeight = 320;
+    let modalX = (board.width - modalWidth) / 2;
+    let modalY = (board.height - modalHeight) / 2;
+
+    // Modal background with rounded corners effect
     context.fillStyle = "white";
-    context.font = "bold 48px Arial";
+    context.shadowColor = "rgba(0, 0, 0, 0.3)";
+    context.shadowBlur = 20;
+    context.fillRect(modalX, modalY, modalWidth, modalHeight);
+    context.shadowBlur = 0;
+
+    // Game Over Title
+    context.fillStyle = "#333";
+    context.font = "bold 42px Arial";
     context.textAlign = "center";
-    context.fillText("GAME OVER", board.width / 2, board.height / 2 - 80);
-    
-    // Show new high score message
+    context.fillText("GAME OVER", board.width / 2, modalY + 60);
+
+    // New High Score badge
     if (isNewHighScore) {
-      context.fillStyle = "#FFD700"; // Gold color
-      context.font = "bold 32px Arial";
-      context.fillText("🎉 NEW HIGH SCORE! 🎉", board.width / 2, board.height / 2 - 30);
+      context.fillStyle = "#FFD700";
+      context.font = "bold 22px Arial";
+      context.fillText("🎉 NEW HIGH SCORE! 🎉", board.width / 2, modalY + 100);
     }
-    
-    context.fillStyle = "white";
-    context.font = "28px Arial";
-    context.fillText("Score: " + finalScore, board.width / 2, board.height / 2 + 20);
-    
+
+    // Scores
+    context.fillStyle = "#666";
     context.font = "24px Arial";
-    context.fillStyle = "#FFD700";
-    context.fillText("High Score: " + highScore, board.width / 2, board.height / 2 + 55);
+    context.fillText("Score: " + finalScore, board.width / 2, modalY + (isNewHighScore ? 145 : 125));
     
+    context.fillStyle = "#FFD700";
+    context.font = "bold 24px Arial";
+    context.fillText("Best: " + highScore, board.width / 2, modalY + (isNewHighScore ? 180 : 160));
+
+    // Replay Button
+    let buttonWidth = 180;
+    let buttonHeight = 55;
+    let buttonX = (board.width - buttonWidth) / 2;
+    let buttonY = modalY + modalHeight - 85;
+
+    // Button shadow
+    context.fillStyle = "rgba(0, 0, 0, 0.15)";
+    context.fillRect(buttonX + 2, buttonY + 2, buttonWidth, buttonHeight);
+
+    // Button
+    context.fillStyle = "#4CAF50";
+    context.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+    // Button text
     context.fillStyle = "white";
-    context.font = "20px Arial";
-    context.fillText("Tap or press SPACE to restart", board.width / 2, board.height / 2 + 95);
+    context.font = "bold 26px Arial";
+    context.fillText("REPLAY", board.width / 2, buttonY + 36);
+
     return;
   }
 
@@ -115,9 +147,11 @@ function update() {
   // Gradually increase speed every 5 points (max speed cap)
   handSpeed = Math.max(-8, -3 - Math.floor(score / 5) * 0.4);
 
-  // Bird
-  velocityY += gravity;
-  bird.y = Math.max(bird.y + velocityY, 0);
+  // Bird - only apply physics if game has started
+  if (gameStarted) {
+    velocityY += gravity;
+    bird.y = Math.max(bird.y + velocityY, 0);
+  }
   context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
   if (bird.y + bird.height >= board.height) {
@@ -163,9 +197,9 @@ function update() {
     context.fillRect(0, 0, board.width, board.height);
 
     context.fillStyle = "white";
-    context.font = "bold 28px Arial";
+    context.font = "bold 32px Arial";
     context.textAlign = "center";
-    context.fillText("Tap or press SPACE to Start", board.width / 2, board.height / 2);
+    context.fillText("TAP TO START", board.width / 2, board.height / 2);
   }
 }
 
@@ -244,10 +278,31 @@ function handleKey(e) {
 
 function handleTouch(e) {
   e.preventDefault();
+  
+  // Handle replay button click on game over
   if (gameOver) {
-    resetGame();
+    let touches = e.touches || [e];
+    let rect = board.getBoundingClientRect();
+    let touchX = touches[0].clientX - rect.left;
+    let touchY = touches[0].clientY - rect.top;
+
+    // Check if tap is on replay button
+    let modalWidth = Math.min(450, board.width * 0.85);
+    let modalHeight = 320;
+    let modalY = (board.height - modalHeight) / 2;
+    let buttonWidth = 180;
+    let buttonHeight = 55;
+    let buttonX = (board.width - buttonWidth) / 2;
+    let buttonY = modalY + modalHeight - 85;
+
+    if (touchX >= buttonX && touchX <= buttonX + buttonWidth &&
+        touchY >= buttonY && touchY <= buttonY + buttonHeight) {
+      resetGame();
+      return;
+    }
     return;
   }
+  
   if (!gameStarted) {
     gameStarted = true;
     handInterval = setInterval(placehand, 2500);
