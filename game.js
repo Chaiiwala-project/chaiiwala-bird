@@ -60,6 +60,8 @@ window.onload = function () {
     board.height = window.innerHeight;
   });
 
+  document.getElementById('replay-btn').addEventListener('click', resetGame);
+
   requestAnimationFrame(update);
 };
 
@@ -72,53 +74,16 @@ function update() {
       isNewHighScore = true;
     }
 
-    context.fillStyle = "rgba(0, 0, 0, 0.6)";
-    context.fillRect(0, 0, board.width, board.height);
-
-    let modalWidth = Math.min(450, board.width * 0.85);
-    let modalHeight = 320;
-    let modalX = (board.width - modalWidth) / 2;
-    let modalY = (board.height - modalHeight) / 2;
-
-    context.fillStyle = "white";
-    context.shadowColor = "rgba(0, 0, 0, 0.3)";
-    context.shadowBlur = 20;
-    context.fillRect(modalX, modalY, modalWidth, modalHeight);
-    context.shadowBlur = 0;
-
-    context.fillStyle = "#333";
-    context.font = "bold 42px Arial";
-    context.textAlign = "center";
-    context.fillText("GAME OVER", board.width / 2, modalY + 60);
-
-    if (isNewHighScore) {
-      context.fillStyle = "#FFD700";
-      context.font = "bold 22px Arial";
-      context.fillText("🎉 NEW HIGH SCORE! 🎉", board.width / 2, modalY + 100);
-    }
-
-    context.fillStyle = "#666";
-    context.font = "24px Arial";
-    context.fillText("Score: " + finalScore, board.width / 2, modalY + (isNewHighScore ? 145 : 125));
+    document.getElementById('final-score').textContent = finalScore;
+    document.getElementById('display-high-score').textContent = highScore;
     
-    context.fillStyle = "#FFD700";
-    context.font = "bold 24px Arial";
-    context.fillText("Best: " + highScore, board.width / 2, modalY + (isNewHighScore ? 180 : 160));
-
-    let buttonWidth = 180;
-    let buttonHeight = 55;
-    let buttonX = (board.width - buttonWidth) / 2;
-    let buttonY = modalY + modalHeight - 85;
-
-    context.fillStyle = "rgba(0, 0, 0, 0.15)";
-    context.fillRect(buttonX + 2, buttonY + 2, buttonWidth, buttonHeight);
-
-    context.fillStyle = "#4CAF50";
-    context.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-    context.fillStyle = "white";
-    context.font = "bold 26px Arial";
-    context.fillText("REPLAY", board.width / 2, buttonY + 36);
+    if (isNewHighScore) {
+      document.getElementById('new-high-score').classList.add('show');
+    } else {
+      document.getElementById('new-high-score').classList.remove('show');
+    }
+    
+    document.getElementById('game-over-overlay').style.display = 'flex';
 
     return;
   }
@@ -228,6 +193,7 @@ function resetGame() {
   isNewHighScore = false;
   handSpeed = -3;
   clearInterval(handInterval);
+  document.getElementById('game-over-overlay').style.display = 'none';
   requestAnimationFrame(update);
 }
 
@@ -253,24 +219,6 @@ function handleTouch(e) {
   e.preventDefault();
   
   if (gameOver) {
-    let touches = e.touches || [e];
-    let rect = board.getBoundingClientRect();
-    let touchX = touches[0].clientX - rect.left;
-    let touchY = touches[0].clientY - rect.top;
-
-    let modalWidth = Math.min(450, board.width * 0.85);
-    let modalHeight = 320;
-    let modalY = (board.height - modalHeight) / 2;
-    let buttonWidth = 180;
-    let buttonHeight = 55;
-    let buttonX = (board.width - buttonWidth) / 2;
-    let buttonY = modalY + modalHeight - 85;
-
-    if (touchX >= buttonX && touchX <= buttonX + buttonWidth &&
-        touchY >= buttonY && touchY <= buttonY + buttonHeight) {
-      resetGame();
-      return;
-    }
     return;
   }
   

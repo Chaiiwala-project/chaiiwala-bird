@@ -9,5 +9,17 @@
 </head>
 <body>
     <canvas id="board"></canvas>
+
+<div id="game-over-overlay" style="display: none;">
+  <img src="img/game_over_bg.png" alt="Game Over" class="game-over-bg">
+  <div class="game-over-content">
+    <div id="new-high-score" class="new-high-score">🎉 NEW HIGH SCORE! 🎉</div>
+    <div class="score-display">
+      <div class="current-score">Score: <span id="final-score">0</span></div>
+      <div class="high-score">Best: <span id="display-high-score">0</span></div>
+    </div>
+    <button id="replay-btn" class="replay-button">REPLAY</button>
+  </div>
+</div>
 </body>
 </html>
