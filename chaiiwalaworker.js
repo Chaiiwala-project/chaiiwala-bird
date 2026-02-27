@@ -24,6 +24,7 @@ const PRECACHE_URLS = [
   '/img/samosa.png',
   '/img/tea.png',
   '/img/top_roll.png',
+  '/img/game_over_bg.png',
 ];
 
 // Install event - cache essential files
