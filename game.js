@@ -34,10 +34,16 @@ bottomhandImg.src = "img/bottom_roll.png";
 
 // Game state
 let score = 0;
+let highScore = 0;
 let gameOver = false;
 let gameStarted = false;
+let isNewHighScore = false;
 
 window.onload = function () {
+  // Load high score from localStorage
+  highScore = localStorage.getItem('snackyFlapHighScore') || 0;
+  highScore = parseInt(highScore);
+
   // Load selected character from start screen
   const selectedCharacter = JSON.parse(sessionStorage.getItem('selectedCharacter'));
   if (selectedCharacter && selectedCharacter.Image) {
@@ -66,16 +72,40 @@ window.onload = function () {
 
 function update() {
   if (gameOver) {
+    // Check if new high score and save it
+    let finalScore = Math.floor(score);
+    if (finalScore > highScore) {
+      highScore = finalScore;
+      localStorage.setItem('snackyFlapHighScore', highScore);
+      isNewHighScore = true;
+    }
+
     context.fillStyle = "rgba(0, 0, 0, 0.55)";
     context.fillRect(0, 0, board.width, board.height);
 
     context.fillStyle = "white";
     context.font = "bold 48px Arial";
     context.textAlign = "center";
-    context.fillText("GAME OVER", board.width / 2, board.height / 2 - 40);
+    context.fillText("GAME OVER", board.width / 2, board.height / 2 - 80);
+    
+    // Show new high score message
+    if (isNewHighScore) {
+      context.fillStyle = "#FFD700"; // Gold color
+      context.font = "bold 32px Arial";
+      context.fillText("🎉 NEW HIGH SCORE! 🎉", board.width / 2, board.height / 2 - 30);
+    }
+    
+    context.fillStyle = "white";
+    context.font = "28px Arial";
+    context.fillText("Score: " + finalScore, board.width / 2, board.height / 2 + 20);
+    
     context.font = "24px Arial";
-    context.fillText("Score: " + Math.floor(score), board.width / 2, board.height / 2 + 20);
-    context.fillText("Tap or press SPACE to restart", board.width / 2, board.height / 2 + 65);
+    context.fillStyle = "#FFD700";
+    context.fillText("High Score: " + highScore, board.width / 2, board.height / 2 + 55);
+    
+    context.fillStyle = "white";
+    context.font = "20px Arial";
+    context.fillText("Tap or press SPACE to restart", board.width / 2, board.height / 2 + 95);
     return;
   }
 
@@ -115,11 +145,17 @@ function update() {
     handarray.shift();
   }
 
-  // Score
+  // Score display
   context.fillStyle = "white";
   context.font = "bold 30px Arial";
   context.textAlign = "left";
   context.fillText("Score: " + Math.floor(score), 20, 50);
+  
+  // High score display (top right)
+  context.fillStyle = "#FFD700";
+  context.font = "bold 24px Arial";
+  context.textAlign = "right";
+  context.fillText("Best: " + highScore, board.width - 20, 45);
 
   // Wait to start message
   if (!gameStarted) {
@@ -182,6 +218,7 @@ function resetGame() {
   score = 0;
   gameOver = false;
   gameStarted = false;
+  isNewHighScore = false;
   handSpeed = -3;
   clearInterval(handInterval);
   requestAnimationFrame(update);
