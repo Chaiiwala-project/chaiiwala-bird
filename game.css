@@ -21,7 +21,7 @@ body {
     background-size: cover;
     background-position: center;
 }
-/* Add this CSS to your game.css file */
+
 
 #game-over-overlay {
   position: fixed;
