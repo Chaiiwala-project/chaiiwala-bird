@@ -15,6 +15,9 @@ const PRECACHE_URLS = [
   '/game.js',
   '/manifest.json',
   '/offline.html',
+  '/fonts/fonts.css',
+  '/fonts/PressStart2P.woff2',
+  '/fonts/FredokaOne.woff2',
   // Game images
   '/img/bottom_roll.png',
   '/img/burger.png',
