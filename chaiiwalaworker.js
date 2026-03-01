@@ -1,33 +1,35 @@
 // Service Worker for PWA
 // Version 1.0.0
 
-const CACHE_NAME = 'pwa-cache-v1';
-const RUNTIME_CACHE = 'pwa-runtime-v1';
+const CACHE_NAME = 'pwa-cache-v2';
+const RUNTIME_CACHE = 'pwa-runtime-v2';
 
 // Files to cache immediately on installation
+const BASE = '/chaiiwala-bird';
+
 const PRECACHE_URLS = [
-  '/',
-  '/index.html',
-  '/game.html',
-  '/style.css',
-  '/game.css',
-  '/script.js',
-  '/game.js',
-  '/manifest.json',
-  '/offline.html',
-  '/fonts/fonts.css',
-  '/fonts/PressStart2P.woff2',
-  '/fonts/FredokaOne.woff2',
+  BASE + '/',
+  BASE + '/index.html',
+  BASE + '/game.html',
+  BASE + '/style.css',
+  BASE + '/game.css',
+  BASE + '/script.js',
+  BASE + '/game.js',
+  BASE + '/manifest.json',
+  BASE + '/offline.html',
+  BASE + '/fonts/fonts.css',
+  BASE + '/fonts/PressStart2P.woff2',
+  BASE + '/fonts/FredokaOne.woff2',
   // Game images
-  '/img/bottom_roll.png',
-  '/img/burger.png',
-  '/img/chips.png',
-  '/img/game_bg.jpeg',
-  '/img/home_bg.png',
-  '/img/samosa.png',
-  '/img/tea.png',
-  '/img/top_roll.png',
-  '/img/game_over_bg.png',
+  BASE + '/img/bottom_roll.png',
+  BASE + '/img/burger.png',
+  BASE + '/img/chips.png',
+  BASE + '/img/game_bg.jpeg',
+  BASE + '/img/home_bg.png',
+  BASE + '/img/samosa.png',
+  BASE + '/img/tea.png',
+  BASE + '/img/top_roll.png',
+  BASE + '/img/game_over_bg.png',
 ];
 
 // Install event - cache essential files
@@ -75,24 +77,28 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // For navigation requests (HTML pages)
+  // For navigation requests (HTML pages) - Cache First strategy
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          // Cache the new page
-          const responseClone = response.clone();
-          caches.open(RUNTIME_CACHE).then((cache) => {
-            cache.put(request, responseClone);
-          });
-          return response;
-        })
-        .catch(() => {
-          // Try cache first, then fallback to offline page
-          return caches.match(request)
-            .then((cachedResponse) => {
-              return cachedResponse || caches.match('/offline.html');
-            });
+      caches.match(request)
+        .then((cachedResponse) => {
+          if (cachedResponse) {
+            // Serve from cache immediately, refresh in background
+            fetch(request).then((response) => {
+              if (response && response.status === 200) {
+                caches.open(CACHE_NAME).then((cache) => cache.put(request, response));
+              }
+            }).catch(() => {});
+            return cachedResponse;
+          }
+          // Not in cache yet, try network
+          return fetch(request)
+            .then((response) => {
+              const responseClone = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+              return response;
+            })
+            .catch(() => caches.match(BASE + '/offline.html'));
         })
     );
     return;
