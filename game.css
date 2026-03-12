@@ -354,6 +354,39 @@ body.light-theme .high-score {
   text-shadow: 0 2px 4px rgba(255,255,255,0.6);
 }
 
+
+/* BUTTON ROW */
+.game-buttons {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+
+.home-button {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 18px;
+  color: white;
+  background: linear-gradient(180deg, #ff6b35 0%, #e65a28 100%);
+  border: 4px solid #9c3417;
+  border-radius: 12px;
+  padding: 16px 40px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #9c3417, 0 10px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.home-button:hover {
+  transform: translateY(2px);
+  box-shadow: 0 4px 0 #9c3417, 0 6px 15px rgba(0,0,0,0.4);
+}
+
+.home-button:active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 #9c3417;
+}
+
 .replay-button {
   font-family: 'Press Start 2P', monospace;
   font-size: 18px;
