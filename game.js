@@ -125,6 +125,8 @@ window.onload = function () {
 
   document.getElementById('replay-btn').addEventListener('click', resetGame);
 
+document.getElementById('home-btn').addEventListener('click', goHome);
+
   requestAnimationFrame(update);
 };
 
@@ -262,7 +264,9 @@ function resetGame() {
   clearInterval(handInterval);
   document.getElementById('game-over-overlay').style.display = 'none';
   
-
+function goHome() {
+  window.location.href = "index.html";
+}
 
 
   requestAnimationFrame(update);
