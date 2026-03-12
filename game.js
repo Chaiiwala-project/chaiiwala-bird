@@ -190,12 +190,13 @@ function update() {
     handarray.shift();
   }
 
-  context.fillStyle = "white";
+  const isLight = settings.theme === 'light';
+  context.fillStyle = isLight ? "#1a1a2e" : "white";
   context.font = "bold 30px Arial";
   context.textAlign = "left";
   context.fillText("Score: " + Math.floor(score), 20, 50);
   
-  context.fillStyle = "#FFD700";
+  context.fillStyle = isLight ? "#b8860b" : "#FFD700";
   context.font = "bold 24px Arial";
   context.textAlign = "right";
   context.fillText("Best: " + highScore, board.width - 20, 45);

@@ -356,7 +356,9 @@ body.light-theme .high-score {
 
 .game-buttons {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   margin-top: 10px;
 }
 
