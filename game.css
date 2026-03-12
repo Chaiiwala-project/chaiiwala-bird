@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 html {
     margin: 0;
     padding: 0;
@@ -9,6 +10,11 @@ body {
     padding: 0;
     font-family:"Press Start 2P", cursive;
     text-align:center;
+    transition: background 0.3s ease;
+}
+
+body.light-theme {
+    background: #f5e6d3;
 }
 
 #board {
@@ -17,12 +23,245 @@ body {
     padding: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url('img/game_bg.jpeg');
+    background-image: url('img/game_bg_dark.jpg');
     background-size: cover;
     background-position: center;
+    transition: background-image 0.3s ease;
 }
 
+body.light-theme #board {
+    background-image: url('img/gamer_bg_light.png');
+}
 
+/* ── SETTINGS BUTTON (TOP LEFT) ── */
+.settings-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 998;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, rgba(255, 217, 122, 0.95) 0%, rgba(244, 169, 53, 0.95) 100%);
+    color: #3d1800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+        0 4px 15px rgba(244, 169, 53, 0.5),
+        0 2px 8px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+body.light-theme .settings-btn {
+    background: linear-gradient(135deg, rgba(255, 248, 231, 0.95) 0%, rgba(255, 228, 181, 0.95) 100%);
+    border: 2px solid #7a3e00;
+    color: #7a3e00;
+    box-shadow: 
+        0 4px 15px rgba(122, 62, 0, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.settings-btn:hover {
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 
+        0 6px 20px rgba(244, 169, 53, 0.7),
+        0 3px 10px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.settings-btn:active {
+    transform: scale(0.95) rotate(90deg);
+    box-shadow: 
+        0 2px 8px rgba(244, 169, 53, 0.3),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.settings-btn svg {
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.settings-btn:hover svg {
+    transform: rotate(180deg);
+}
+/* ── SETTINGS PANEL ── */
+.settings-panel {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: min(350px, 85vw);
+    height: 100vh;
+    background: linear-gradient(160deg, #3d1800 0%, #5a2500 60%, #3d1800 100%);
+    border-right: 4px solid #f4a935;
+    z-index: 999;
+    transition: left 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow: 4px 0 30px rgba(0,0,0,0.5);
+    padding: 80px 25px 25px;
+    overflow-y: auto;
+}
+
+body.light-theme .settings-panel {
+    background: linear-gradient(160deg, #fff8e7 0%, #ffe4b5 60%, #fff8e7 100%);
+    border-right-color: #7a3e00;
+}
+
+.settings-panel.active {
+    left: 0;
+}
+
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.settings-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    color: #ffd97a;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(244,169,53,0.6);
+    margin-bottom: 10px;
+}
+
+body.light-theme .settings-title {
+    color: #7a3e00;
+    text-shadow: 0 2px 4px rgba(122,62,0,0.3);
+}
+
+.setting-item {
+    background: rgba(0,0,0,0.2);
+    padding: 18px;
+    border-radius: 12px;
+    border: 2px solid rgba(244,169,53,0.3);
+}
+
+body.light-theme .setting-item {
+    background: rgba(255,255,255,0.5);
+    border-color: rgba(122,62,0,0.3);
+}
+
+.setting-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: #ffd97a;
+    cursor: pointer;
+}
+
+body.light-theme .setting-label {
+    color: #3d1800;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toggle-option {
+    font-size: 14px;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #7a3e00;
+    transition: 0.3s;
+    border-radius: 28px;
+    border: 2px solid #f4a935;
+}
+
+body.light-theme .toggle-slider {
+    background-color: #ffe4b5;
+    border-color: #7a3e00;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: #ffd97a;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+body.light-theme .toggle-slider:before {
+    background-color: #7a3e00;
+}
+
+input:checked + .toggle-slider {
+    background-color: #f4a935;
+}
+
+body.light-theme input:checked + .toggle-slider {
+    background-color: #7a3e00;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+    background-color: #3d1800;
+}
+
+body.light-theme input:checked + .toggle-slider:before {
+    background-color: #ffd97a;
+}
+
+.close-settings-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: #3b1a00;
+    background: linear-gradient(180deg, #ffd97a 0%, #f4a935 50%, #e08010 100%);
+    border: 3px solid #7a3e00;
+    border-radius: 10px;
+    padding: 12px 32px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #7a3e00;
+    transition: transform 0.1s, box-shadow 0.1s;
+    width: 100%;
+    letter-spacing: 1px;
+    margin-top: 15px;
+}
+
+.close-settings-btn:hover { 
+    filter: brightness(1.1); 
+}
+
+.close-settings-btn:active { 
+    transform: translateY(4px); 
+    box-shadow: 0 0 0 #7a3e00; 
+}
+
+/* GAME OVER OVERLAY */
 #game-over-overlay {
   position: fixed;
   top: 0;
@@ -33,7 +272,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 997;
+}
+
+body.light-theme #game-over-overlay {
+  background: rgba(245, 230, 211, 0.85);
 }
 
 .game-over-bg {
@@ -42,6 +285,7 @@ body {
   width: auto;
   height: auto;
   position: relative;
+  transition: opacity 0.3s ease;
 }
 
 .game-over-content {
@@ -67,6 +311,11 @@ body {
   animation: bounce 0.5s ease-in-out;
 }
 
+body.light-theme .new-high-score {
+  color: #FF8C00;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 .new-high-score.show {
   display: block;
 }
@@ -89,10 +338,20 @@ body {
   text-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
 
+body.light-theme .current-score {
+  color: #3d1800;
+  text-shadow: 0 2px 4px rgba(255,255,255,0.6);
+}
+
 .high-score {
   color: #FFF3C4;
   text-shadow: 0 2px 4px rgba(0,0,0,0.4);
   font-weight: bold;
+}
+
+body.light-theme .high-score {
+  color: #7a3e00;
+  text-shadow: 0 2px 4px rgba(255,255,255,0.6);
 }
 
 .replay-button {
@@ -131,5 +390,17 @@ body {
   .replay-button {
     font-size: 14px;
     padding: 12px 36px;
+  }
+
+  .settings-panel {
+    width: 90vw;
+  }
+
+  .settings-title {
+    font-size: 14px;
+  }
+
+  .setting-label {
+    font-size: 10px;
   }
 }

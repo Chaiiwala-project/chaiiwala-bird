@@ -1,3 +1,113 @@
+const audio = {
+  backgroundMusic: new Audio('audio/background-music.mp3'),
+  jump: new Audio('audio/sfx_wing.mp3'),
+  score: new Audio('audio/sfx_point.mp3'),
+  death: new Audio('audio/sfx_die.mp3')
+};
+
+
+audio.backgroundMusic.loop = true;
+audio.backgroundMusic.volume = 0.3;
+
+
+let settings = {
+  theme: 'dark',
+  musicEnabled: true,
+  sfxEnabled: true
+};
+function loadSettings() {
+  const saved = sessionStorage.getItem('gameSettings');
+  if (saved) {
+    settings = JSON.parse(saved);
+    applyTheme();
+    applyAudioSettings();
+  }
+}
+
+
+function applyTheme() {
+  if (settings.theme === 'light') {
+    document.body.classList.add('light-theme');
+    document.getElementById('theme-toggle').checked = true;
+    
+    const gameOverBg = document.getElementById('game-over-bg');
+    if (gameOverBg) {
+      gameOverBg.src = 'img/game_over_light.png';
+    }
+  } else {
+    document.body.classList.remove('light-theme');
+    document.getElementById('theme-toggle').checked = false;
+    
+    const gameOverBg = document.getElementById('game-over-bg');
+    if (gameOverBg) {
+      gameOverBg.src = 'img/game_over_dark.png';
+    }
+  }
+}
+
+function applyAudioSettings() {
+  document.getElementById('music-toggle').checked = settings.musicEnabled;
+  document.getElementById('sfx-toggle').checked = settings.sfxEnabled;
+  
+  if (settings.musicEnabled) {
+    playBackgroundMusic();
+  }
+}
+
+function saveSettings() {
+  localStorage.setItem('chaiiwalaBirdSettings', JSON.stringify(settings));
+  sessionStorage.setItem('gameSettings', JSON.stringify(settings));
+}
+
+function toggleSettings() {
+  const panel = document.getElementById('settings-panel');
+  panel.classList.toggle('active');
+}
+
+// Toggle theme
+function toggleTheme() {
+  settings.theme = document.getElementById('theme-toggle').checked ? 'light' : 'dark';
+  applyTheme();
+  saveSettings();
+}
+
+
+function toggleMusic() {
+  settings.musicEnabled = document.getElementById('music-toggle').checked;
+  if (settings.musicEnabled) {
+    playBackgroundMusic();
+  } else {
+    audio.backgroundMusic.pause();
+  }
+  saveSettings();
+}
+
+// Toggle SFX
+function toggleSFX() {
+  settings.sfxEnabled = document.getElementById('sfx-toggle').checked;
+  saveSettings();
+}
+
+
+function playBackgroundMusic() {
+  if (settings.musicEnabled && gameStarted) {
+    audio.backgroundMusic.play().catch(err => {
+      console.log('Background music autoplay prevented:', err);
+    });
+  }
+}
+
+
+function playSFX(sound) {
+  if (settings.sfxEnabled && audio[sound]) {
+    audio[sound].currentTime = 0;
+    audio[sound].play().catch(err => {
+      console.log('Sound effect failed:', err);
+    });
+  }
+}
+
+
 let board;
 let context;
 let birdx;
@@ -34,7 +144,15 @@ let gameOver = false;
 let gameStarted = false;
 let isNewHighScore = false;
 
+
+let flysound = new Audio("audio/sfx_wing.mp3");
+let diesound = new Audio("audio/sfx_die.mp3");
+let pointsound = new Audio("audio/sfx_point.mp3");
+
 window.onload = function () {
+
+  loadSettings();
+  
   highScore = sessionStorage.getItem('snackyFlapHighScore') || 0;
   highScore = parseInt(highScore);
 
@@ -85,6 +203,8 @@ function update() {
     
     document.getElementById('game-over-overlay').style.display = 'flex';
 
+    audio.backgroundMusic.pause();
+
     return;
   }
 
@@ -100,6 +220,13 @@ function update() {
   context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
   if (bird.y + bird.height >= board.height) {
+    if (!gameOver) {
+      // Use settings-aware audio
+      if (settings.sfxEnabled) {
+        diesound.currentTime = 0;
+        diesound.play();
+      }
+    }
     gameOver = true;
   }
 
@@ -110,10 +237,23 @@ function update() {
 
     if (!hand.passed && hand.x + hand.width < bird.x) {
       score += 0.5;
+      
+
+      if (settings.sfxEnabled) {
+        pointsound.currentTime = 0;
+        pointsound.play();
+      }
       hand.passed = true;
     }
 
     if (detectCollision(bird, hand)) {
+      if (!gameOver) {
+        // Use settings-aware audio
+        if (settings.sfxEnabled) {
+          diesound.currentTime = 0;
+          diesound.play();
+        }
+      }
       gameOver = true;
     }
   }
@@ -194,6 +334,19 @@ function resetGame() {
   handSpeed = -3;
   clearInterval(handInterval);
   document.getElementById('game-over-overlay').style.display = 'none';
+  
+
+  if (settings.musicEnabled) {
+    audio.backgroundMusic.currentTime = 0;
+    playBackgroundMusic();
+  }
+  
+
+  if (settings.sfxEnabled) {
+    flysound.currentTime = 0;
+    flysound.play();
+  }
+  
   requestAnimationFrame(update);
 }
 
@@ -207,8 +360,15 @@ function handleKey(e) {
     if (!gameStarted) {
       gameStarted = true;
       handInterval = setInterval(placehand, 2500);
+      playBackgroundMusic();
     }
     velocityY = jump;
+    
+
+    if (settings.sfxEnabled) {
+      flysound.currentTime = 0;
+      flysound.play();
+    }
   }
   if (e.code === "KeyR") {
     resetGame();
@@ -225,6 +385,13 @@ function handleTouch(e) {
   if (!gameStarted) {
     gameStarted = true;
     handInterval = setInterval(placehand, 2500);
+    playBackgroundMusic();
   }
   velocityY = jump;
+  
+
+  if (settings.sfxEnabled) {
+    flysound.currentTime = 0;
+    flysound.play();
+  }
 }
