@@ -1,8 +1,8 @@
 // Service Worker for PWA
 // Version 1.0.0
 
-const CACHE_NAME = 'pwa-cache-v2';
-const RUNTIME_CACHE = 'pwa-runtime-v2';
+const CACHE_NAME = 'pwa-cache-v3';
+const RUNTIME_CACHE = 'pwa-runtime-v3';
 
 // Files to cache immediately on installation
 const BASE = '/chaiiwala-bird';
@@ -24,12 +24,15 @@ const PRECACHE_URLS = [
   BASE + '/img/bottom_roll.png',
   BASE + '/img/burger.png',
   BASE + '/img/chips.png',
-  BASE + '/img/game_bg.jpeg',
-  BASE + '/img/home_bg.png',
+  BASE + '/img/game_bg_dark.jpg',
+  BASE + '/img/game_over_dark.png',
+  BASE + '/img/game_over_light.png',
+  BASE + '/img/gamer_bg_light.png',
+  BASE + '/img/home_bg_dark.png',
+  BASE + '/img/home_bg_light.png',
   BASE + '/img/samosa.png',
   BASE + '/img/tea.png',
   BASE + '/img/top_roll.png',
-  BASE + '/img/game_over_bg.png',
 ];
 
 // Install event - cache essential files
