@@ -291,7 +291,7 @@ function handleKey(e) {
 }
 
 function goHome() {
-  window.location.href = 'index.html';
+  window.location.href = '/chaiiwala-bird/index.html';
 }
 
 function handleTouch(e) {
