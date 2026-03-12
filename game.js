@@ -291,7 +291,7 @@ function handleKey(e) {
 }
 
 function goHome() {
-  window.location.href = './index.html';
+  window.location.href = './';
 }
 
 function handleTouch(e) {
