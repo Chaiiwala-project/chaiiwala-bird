@@ -124,8 +124,7 @@ window.onload = function () {
   });
 
   document.getElementById('replay-btn').addEventListener('click', resetGame);
-
-document.getElementById('home-btn').addEventListener('click', goHome);
+  document.getElementById('home-btn').addEventListener('click', goHome);
 
   requestAnimationFrame(update);
 };
@@ -263,10 +262,9 @@ function resetGame() {
   handSpeed = -3;
   clearInterval(handInterval);
   document.getElementById('game-over-overlay').style.display = 'none';
+  document.getElementById('settings-btn').style.display = '';
   
-function goHome() {
-  window.location.href = "index.html";
-}
+
 
 
   requestAnimationFrame(update);
@@ -282,16 +280,17 @@ function handleKey(e) {
     if (!gameStarted) {
       gameStarted = true;
       handInterval = setInterval(placehand, 2500);
-      
+      document.getElementById('settings-btn').style.display = 'none';
     }
     velocityY = jump;
-    
-
-
   }
   if (e.code === "KeyR") {
     resetGame();
   }
+}
+
+function goHome() {
+  window.location.href = 'index.html';
 }
 
 function handleTouch(e) {
@@ -304,6 +303,7 @@ function handleTouch(e) {
   if (!gameStarted) {
     gameStarted = true;
     handInterval = setInterval(placehand, 2500);
+    document.getElementById('settings-btn').style.display = 'none';
   }
   velocityY = jump;
   
