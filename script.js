@@ -1,20 +1,6 @@
-
-const audio = {
-  backgroundMusic: new Audio('audio/background-music.mp3'),
-  jump: new Audio('audio/sfx_wing.mp3'),
-  score: new Audio('audio/sfx_point.mp3'),
-  death: new Audio('audio/sfx_die.mp3')
-};
-
-
-audio.backgroundMusic.loop = true;
-audio.backgroundMusic.volume = 0.3;
-
-
 let settings = {
   theme: 'dark',
-  musicEnabled: true,
-  sfxEnabled: true
+
 };
 
 
@@ -46,15 +32,6 @@ function applySettings() {
   }
   
 
-  document.getElementById('music-toggle').checked = settings.musicEnabled;
-  if (settings.musicEnabled) {
-    playBackgroundMusic();
-  } else {
-    audio.backgroundMusic.pause();
-  }
-  
-
-  document.getElementById('sfx-toggle').checked = settings.sfxEnabled;
 }
 
 
@@ -71,36 +48,6 @@ function toggleTheme() {
 }
 
 
-function toggleMusic() {
-  settings.musicEnabled = document.getElementById('music-toggle').checked;
-  applySettings();
-  saveSettings();
-}
-
-
-function toggleSFX() {
-  settings.sfxEnabled = document.getElementById('sfx-toggle').checked;
-  saveSettings();
-}
-
-
-function playBackgroundMusic() {
-  if (settings.musicEnabled) {
-    audio.backgroundMusic.play().catch(err => {
-      console.log('Background music autoplay prevented:', err);
-    });
-  }
-}
-
-
-function playSFX(sound) {
-  if (settings.sfxEnabled && audio[sound]) {
-    audio[sound].currentTime = 0;
-    audio[sound].play().catch(err => {
-      console.log('Sound effect failed:', err);
-    });
-  }
-}
 
 
 const characters = [
@@ -139,27 +86,27 @@ function updateChar() {
 function prevChar() {
   current = (current - 1 + characters.length) % characters.length;
   updateChar();
-  playSFX('jump');
+
 }
 
 function nextChar() {
   current = (current + 1) % characters.length;
   updateChar();
-  playSFX('jump'); 
+
 }
 
 function openCharSelect() {
   buildDots();
   updateChar();
   document.getElementById('char-overlay').classList.add('active');
-  playSFX('score'); 
+
 }
 
 function confirmChar() {
   const selected = characters[current];
 
   sessionStorage.setItem('selectedCharacter', JSON.stringify(selected));
-  playSFX('score');
+
   
 
   setTimeout(() => {
@@ -172,6 +119,4 @@ window.addEventListener('DOMContentLoaded', () => {
   buildDots();
   loadSettings();
 
-  document.addEventListener('click', playBackgroundMusic, { once: true });
-  document.addEventListener('touchstart', playBackgroundMusic, { once: true });
 });
