@@ -1,39 +1,34 @@
+const API_BASE = 'http://127.0.0.1:8000';
 
 let settings = {
   theme: 'dark',
   musicEnabled: true,
   sfxEnabled: true
 };
+
+let playerName = '';
+
 function loadSettings() {
   const saved = sessionStorage.getItem('gameSettings');
   if (saved) {
     settings = JSON.parse(saved);
     applyTheme();
-
   }
 }
-
 
 function applyTheme() {
   if (settings.theme === 'light') {
     document.body.classList.add('light-theme');
     document.getElementById('theme-toggle').checked = true;
-    
     const gameOverBg = document.getElementById('game-over-bg');
-    if (gameOverBg) {
-      gameOverBg.src = 'img/game_over_light.png';
-    }
+    if (gameOverBg) gameOverBg.src = 'img/game_over_light.png';
   } else {
     document.body.classList.remove('light-theme');
     document.getElementById('theme-toggle').checked = false;
-    
     const gameOverBg = document.getElementById('game-over-bg');
-    if (gameOverBg) {
-      gameOverBg.src = 'img/game_over_dark.png';
-    }
+    if (gameOverBg) gameOverBg.src = 'img/game_over_dark.png';
   }
 }
-
 
 function saveSettings() {
   localStorage.setItem('chaiiwalaBirdSettings', JSON.stringify(settings));
@@ -41,24 +36,19 @@ function saveSettings() {
 }
 
 function toggleSettings() {
-  const panel = document.getElementById('settings-panel');
-  panel.classList.toggle('active');
+  document.getElementById('settings-panel').classList.toggle('active');
 }
 
-// Toggle theme
 function toggleTheme() {
   settings.theme = document.getElementById('theme-toggle').checked ? 'light' : 'dark';
   applyTheme();
   saveSettings();
 }
 
+// ── GAME OBJECTS ─────────────────────────────────────────────────────────────
 
-
-
-let board;
-let context;
-let birdx;
-let birdy;
+let board, context;
+let birdx, birdy;
 let birdwidth = 60;
 let birdheight = 45;
 let bird;
@@ -71,19 +61,53 @@ let gravity = 0.2;
 let jump = -6;
 
 let handarray = [];
-let handwidth = 80;
+// Width of the pole/totem as drawn on screen
+const IMG_W = 308;
+const IMG_H = 811;
+const TOTEM_DRAW_H = 280;                    // how tall to draw the full image
+const POLE_W = Math.round(TOTEM_DRAW_H * IMG_W / IMG_H); // ~106px, keeps aspect ratio
+// How tall the totem sign image is drawn (fixed, not stretched)
+// TOTEM_H removed — now derived from TOTEM_DRAW_H above
+// Width of the thin pole bar drawn behind the totem
+const POLE_BAR_W = 0; // no separate bar needed, image has its own pole
+
 let handx;
 let handy = 0;
 let openingspace = 220;
 
 let handSpeed = -3;
-let handInterval;
+let handInterval = null;
+let lastSpawnInterval = 2500;
 
-let tophandImg = new Image();
-tophandImg.src = "img/top_roll.png";
+// ── DIFFICULTY ───────────────────────────────────────────────────────────────
 
-let bottomhandImg = new Image();
-bottomhandImg.src = "img/bottom_roll.png";
+const SPEED_START   = -3;
+const SPEED_MAX     = -11;
+const GAP_START     = 220;
+const GAP_MIN       = 140;
+const GRAVITY_START = 0.20;
+const GRAVITY_MAX   = 0.32;
+const SPAWN_START   = 2500;
+const SPAWN_MIN     = 1200;
+
+function getDifficulty(s) {
+  const t    = Math.min(s / 60, 1);
+  const ease = t * t;
+  return {
+    speed:   SPEED_START   + (SPEED_MAX   - SPEED_START)   * ease,
+    gap:     GAP_START     + (GAP_MIN     - GAP_START)     * ease,
+    gravity: GRAVITY_START + (GRAVITY_MAX - GRAVITY_START) * ease,
+    spawn:   SPAWN_START   + (SPAWN_MIN   - SPAWN_START)   * ease,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+let tophandImg = new Image();    // hangs from ceiling  → pole_down
+tophandImg.src = "img/pole_down.png";
+
+let bottomhandImg = new Image(); // rises from floor    → pole_up
+bottomhandImg.src = "img/pole_up.png";
 
 let score = 0;
 let highScore = 0;
@@ -91,15 +115,11 @@ let gameOver = false;
 let gameStarted = false;
 let isNewHighScore = false;
 
-
-
-
 window.onload = function () {
-
   loadSettings();
-  
-  highScore = sessionStorage.getItem('snackyFlapHighScore') || 0;
-  highScore = parseInt(highScore);
+
+  playerName = sessionStorage.getItem('playerName') || localStorage.getItem('playerName') || 'Player';
+  highScore = parseInt(localStorage.getItem('chaiiwalaBirdHighScore_' + playerName) || 0);
 
   const selectedCharacter = JSON.parse(sessionStorage.getItem('selectedCharacter'));
   if (selectedCharacter && selectedCharacter.img) {
@@ -108,18 +128,18 @@ window.onload = function () {
 
   board = document.getElementById("board");
   context = board.getContext("2d");
-  board.width = window.innerWidth;
+  board.width  = window.innerWidth;
   board.height = window.innerHeight;
 
   birdx = board.width / 8;
   birdy = board.height / 2;
   handx = board.width;
-  bird = { x: birdx, y: birdy, width: birdwidth, height: birdheight };
+  bird  = { x: birdx, y: birdy, width: birdwidth, height: birdheight };
 
   document.addEventListener("keydown", handleKey);
   document.addEventListener("touchstart", handleTouch);
   window.addEventListener("resize", function () {
-    board.width = window.innerWidth;
+    board.width  = window.innerWidth;
     board.height = window.innerHeight;
   });
 
@@ -134,28 +154,40 @@ function update() {
     let finalScore = Math.floor(score);
     if (finalScore > highScore) {
       highScore = finalScore;
+      localStorage.setItem('chaiiwalaBirdHighScore_' + playerName, highScore);
       sessionStorage.setItem('snackyFlapHighScore', highScore);
       isNewHighScore = true;
+      submitScore(playerName, highScore);
     }
 
     document.getElementById('final-score').textContent = finalScore;
     document.getElementById('display-high-score').textContent = highScore;
-    
+
     if (isNewHighScore) {
       document.getElementById('new-high-score').classList.add('show');
     } else {
       document.getElementById('new-high-score').classList.remove('show');
     }
-    
-    document.getElementById('game-over-overlay').style.display = 'flex';
 
+    document.getElementById('game-over-overlay').style.display = 'flex';
     return;
   }
 
   requestAnimationFrame(update);
   context.clearRect(0, 0, board.width, board.height);
 
-  handSpeed = Math.max(-8, -3 - Math.floor(score / 5) * 0.4);
+  // ── Apply difficulty every frame ──
+  const diff = getDifficulty(score);
+  handSpeed    = diff.speed;
+  openingspace = diff.gap;
+  gravity      = diff.gravity;
+
+  const targetSpawn = Math.round(diff.spawn);
+  if (gameStarted && Math.abs(targetSpawn - lastSpawnInterval) > 50) {
+    clearInterval(handInterval);
+    handInterval = setInterval(placehand, targetSpawn);
+    lastSpawnInterval = targetSpawn;
+  }
 
   if (gameStarted) {
     velocityY += gravity;
@@ -164,20 +196,16 @@ function update() {
   context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
   if (bird.y + bird.height >= board.height) {
-
     gameOver = true;
   }
 
   for (let i = 0; i < handarray.length; i++) {
     let hand = handarray[i];
     hand.x += handSpeed;
-    context.drawImage(hand.img, hand.x, hand.y, hand.width, hand.height);
+    drawTotem(hand);
 
-    if (!hand.passed && hand.x + hand.width < bird.x) {
+    if (!hand.passed && hand.x + POLE_W < bird.x) {
       score += 0.5;
-      
-
-
       hand.passed = true;
     }
 
@@ -186,16 +214,17 @@ function update() {
     }
   }
 
-  while (handarray.length > 0 && handarray[0].x < -handwidth) {
+  while (handarray.length > 0 && handarray[0].x < -POLE_W) {
     handarray.shift();
   }
 
+  // ── HUD ──
   const isLight = settings.theme === 'light';
   context.fillStyle = isLight ? "#1a1a2e" : "white";
   context.font = "bold 30px Arial";
   context.textAlign = "left";
   context.fillText("Score: " + Math.floor(score), 20, 50);
-  
+
   context.fillStyle = isLight ? "#b8860b" : "#FFD700";
   context.font = "bold 24px Arial";
   context.textAlign = "right";
@@ -204,11 +233,24 @@ function update() {
   if (!gameStarted) {
     context.fillStyle = "rgba(0, 0, 0, 0.45)";
     context.fillRect(0, 0, board.width, board.height);
-
     context.fillStyle = "white";
     context.font = "bold 32px Arial";
     context.textAlign = "center";
     context.fillText("TAP TO START", board.width / 2, board.height / 2);
+  }
+}
+
+// Draw a totem properly: thin pole bar + fixed-size sign image at the gap edge
+function drawTotem(hand) {
+  // Stretch image to fill entire pipe height, same as original rolls
+  // pole_up  (bottom): top of image = gap edge, stretches down to screen bottom
+  // pole_down (top):   bottom of image = gap edge, stretches up to screen top
+  const drawW = POLE_W;
+
+  if (hand.isTop) {
+    context.drawImage(hand.img, hand.x, hand.y, drawW, hand.height);
+  } else {
+    context.drawImage(hand.img, hand.x, hand.y, drawW, hand.height);
   }
 }
 
@@ -219,37 +261,50 @@ function placehand() {
   let maxOpeningY = board.height - openingspace - 120;
   let openingY = minOpeningY + Math.random() * (maxOpeningY - minOpeningY);
 
-  let tophand = {
+  // Top pipe — hangs from ceiling, gap edge at openingY
+  handarray.push({
     img: tophandImg,
     x: board.width,
     y: 0,
-    width: handwidth,
+    width: POLE_W,
     height: openingY,
+    isTop: true,
     passed: false,
-  };
-  handarray.push(tophand);
+  });
 
-  let bottomhand = {
+  // Bottom pipe — rises from floor, gap edge at openingY + openingspace
+  handarray.push({
     img: bottomhandImg,
     x: board.width,
     y: openingY + openingspace,
-    width: handwidth,
+    width: POLE_W,
     height: board.height - (openingY + openingspace),
+    isTop: false,
     passed: false,
-  };
-  handarray.push(bottomhand);
+  });
 }
 
 function detectCollision(a, b) {
   let birdPadding = 12;
   let handPadding = 5;
-
   return (
-    a.x + birdPadding < b.x + b.width - handPadding &&
-    a.x + a.width - birdPadding > b.x + handPadding &&
-    a.y + birdPadding < b.y + b.height - handPadding &&
-    a.y + a.height - birdPadding > b.y + handPadding
+    a.x + birdPadding         < b.x + b.width  - handPadding &&
+    a.x + a.width - birdPadding > b.x           + handPadding &&
+    a.y + birdPadding         < b.y + b.height  - handPadding &&
+    a.y + a.height - birdPadding > b.y           + handPadding
   );
+}
+
+async function submitScore(name, score) {
+  try {
+    await fetch(`${API_BASE}/submit-score`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, score })
+    });
+  } catch (err) {
+    console.warn('Could not submit score:', err);
+  }
 }
 
 function resetGame() {
@@ -260,34 +315,30 @@ function resetGame() {
   gameOver = false;
   gameStarted = false;
   isNewHighScore = false;
-  handSpeed = -3;
+  handSpeed = SPEED_START;
+  openingspace = GAP_START;
+  gravity = GRAVITY_START;
+  lastSpawnInterval = SPAWN_START;
   clearInterval(handInterval);
+  handInterval = null;
   document.getElementById('game-over-overlay').style.display = 'none';
   document.getElementById('settings-btn').style.display = '';
-  
-
-
-
   requestAnimationFrame(update);
 }
 
 function handleKey(e) {
   if (e.code === "Space") {
     e.preventDefault();
-    if (gameOver) {
-      resetGame();
-      return;
-    }
+    if (gameOver) { resetGame(); return; }
     if (!gameStarted) {
       gameStarted = true;
-      handInterval = setInterval(placehand, 2500);
+      lastSpawnInterval = SPAWN_START;
+      handInterval = setInterval(placehand, SPAWN_START);
       document.getElementById('settings-btn').style.display = 'none';
     }
     velocityY = jump;
   }
-  if (e.code === "KeyR") {
-    resetGame();
-  }
+  if (e.code === "KeyR") resetGame();
 }
 
 function goHome() {
@@ -296,18 +347,12 @@ function goHome() {
 
 function handleTouch(e) {
   e.preventDefault();
-  
-  if (gameOver) {
-    return;
-  }
-  
+  if (gameOver) return;
   if (!gameStarted) {
     gameStarted = true;
-    handInterval = setInterval(placehand, 2500);
+    lastSpawnInterval = SPAWN_START;
+    handInterval = setInterval(placehand, SPAWN_START);
     document.getElementById('settings-btn').style.display = 'none';
   }
   velocityY = jump;
-  
-
-
 }

@@ -18,7 +18,6 @@
 
 <div id="bg"></div>
 
-
 <button id="settings-btn" class="settings-btn" onclick="toggleSettings()">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <circle cx="12" cy="12" r="3"></circle>
@@ -26,11 +25,11 @@
   </svg>
 </button>
 
+<button id="leaderboard-btn" class="leaderboard-btn" onclick="openLeaderboard()">🏆</button>
 
 <div id="settings-panel" class="settings-panel">
   <div class="settings-content">
     <h2 class="settings-title">SETTINGS</h2>
-    
     <div class="setting-item">
       <label class="setting-label">
         <span>THEME</span>
@@ -44,12 +43,9 @@
         </div>
       </label>
     </div>
-
-
     <button class="close-settings-btn" onclick="toggleSettings()">CLOSE</button>
   </div>
 </div>
-
 
 <div class="particle" style="left:10%; animation-duration:8s; animation-delay:0s;">☕</div>
 <div class="particle" style="left:25%; animation-duration:11s; animation-delay:2s;">🍵</div>
@@ -57,15 +53,34 @@
 <div class="particle" style="left:70%; animation-duration:13s; animation-delay:1s;">🫖</div>
 <div class="particle" style="left:85%; animation-duration:10s; animation-delay:6s;">☕</div>
 
-
 <div id="start-screen">
-<button class="start-btn" onclick="openCharSelect()">▶ PLAY</button>
+  <button class="start-btn" onclick="openNameEntry()">▶ PLAY</button>
 </div>
 
-<div id="char-overlay">
-<div class="char-modal">
-    <div class="modal-title">CHOOSE YOUR CHARACTER</div>
+<!-- NAME ENTRY MODAL -->
+<div id="name-overlay">
+  <div class="char-modal name-modal">
+    <div class="modal-title">ENTER YOUR NAME</div>
+    <div class="name-input-wrap">
+      <input
+        type="text"
+        id="player-name-input"
+        class="player-name-input"
+        placeholder="YOUR NAME"
+        maxlength="16"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <div class="name-hint">Max 16 characters</div>
+    </div>
+    <button class="confirm-btn" onclick="confirmName()">✔ CONFIRM</button>
+  </div>
+</div>
 
+<!-- CHARACTER SELECTION OVERLAY -->
+<div id="char-overlay">
+  <div class="char-modal">
+    <div class="modal-title">CHOOSE YOUR CHARACTER</div>
     <div class="char-row">
       <button class="arrow-btn" onclick="prevChar()">◀</button>
       <div class="char-card">
@@ -74,12 +89,22 @@
       </div>
       <button class="arrow-btn" onclick="nextChar()">▶</button>
     </div>
-
     <div class="dots" id="dots"></div>
-
     <button class="confirm-btn" onclick="confirmChar()">✔ CONFIRM</button>
   </div>
 </div>
+
+<!-- LEADERBOARD OVERLAY -->
+<div id="leaderboard-overlay">
+  <div class="char-modal leaderboard-modal">
+    <div class="modal-title">🏆 LEADERBOARD</div>
+    <div id="leaderboard-list" class="leaderboard-list">
+      <div class="lb-loading">Loading...</div>
+    </div>
+    <button class="confirm-btn" onclick="closeLeaderboard()">✖ CLOSE</button>
+  </div>
+</div>
+
 <script src="/sw-register.js"></script>
 </body>
 </html>
