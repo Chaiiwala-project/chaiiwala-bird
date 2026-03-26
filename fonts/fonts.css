@@ -1,48 +1,19 @@
-/* Chaiiwala Fonts */
 @font-face {
-  font-family: 'MyriadPro-Black';
-  src: url('fonts/myriad-pro-black.woff2') format('woff2'),
-       url('fonts/myriad-pro-black.woff') format('woff');
-  font-weight: 900;
+  font-family: 'MYRIADPRO-BOLD';
   font-style: normal;
-}
-
-@font-face {
-  font-family: 'CentaurMTStd-Bold';
-  src: url('fonts/CentaurMTSd-Bold.woff2') format('woff2'),
-       url('fonts/CentaurMTSd-Bold.woff') format('woff');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'MyriadPro-SemiBold';
-  src: url('fonts/myriad-pro-semibold.woff2') format('woff2'),
-       url('fonts/myriad-pro-semibold.woff') format('woff');
-  font-weight: 600;
-  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('MYRIADPRO-BOLD.woff2') format('woff2'),
+       url('MYRIADPRO-BOLD.otf') format('opentype'),
+       url('myriadpro-bold.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Colatin';
-  src: url('fonts/colatin.woff2') format('woff2'),
-       url('fonts/colatin.woff') format('woff');
-  font-weight: normal;
   font-style: normal;
-}
-
-@font-face {
-  font-family: 'MyriadPro-Regular';
-  src: url('fonts/myriad-pro-regular.woff2') format('woff2'),
-       url('fonts/myriad-pro-regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'MyriadPro-Bold';
-  src: url('fonts/myriad-pro-bold.woff2') format('woff2'),
-       url('fonts/myriad-pro-bold.woff') format('woff');
-  font-weight: bold;
-  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('Colatin.woff2') format('woff2'),
+       url('Colatin.otf') format('opentype'),
+       url('colatin_.ttf') format('truetype');
 }
