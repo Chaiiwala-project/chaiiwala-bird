@@ -6,7 +6,7 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font-family:"MYRIADPRO-BOLD", sans-serif;
+    font-family:'MyriadPro-SemiBold', sans-serif;
     text-align:center;
     transition: background 0.3s ease;
 }
@@ -120,7 +120,7 @@ body.light-theme .settings-panel {
 }
 
 .settings-title {
-    font-family: 'MYRIADPRO-BOLD', sans-serif;
+    font-family: 'MyriadPro-SemiBold', sans-serif;
     font-size: 16px;
     color: #ffd97a;
     text-align: center;
@@ -149,7 +149,7 @@ body.light-theme .setting-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'MYRIADPRO-BOLD', sans-serif;
+    font-family: 'MyriadPro-SemiBold', sans-serif;
     font-size: 11px;
     color: #ffd97a;
     cursor: pointer;
@@ -235,7 +235,7 @@ body.light-theme input:checked + .toggle-slider:before {
 }
 
 .close-settings-btn {
-    font-family: 'MYRIADPRO-BOLD', sans-serif;
+    font-family: 'MyriadPro-SemiBold', sans-serif;
     font-size: 11px;
     color: #3b1a00;
     background: linear-gradient(180deg, #ffd97a 0%, #f4a935 50%, #e08010 100%);
@@ -301,7 +301,7 @@ body.light-theme #game-over-overlay {
 }
 
 .new-high-score {
-  font-family: 'MYRIADPRO-BOLD', sans-serif;
+  font-family: 'MyriadPro-SemiBold', sans-serif;
   font-size: 18px;
   color: #FFD700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -327,7 +327,7 @@ body.light-theme .new-high-score {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  font-family: 'MYRIADPRO-BOLD', sans-serif;
+  font-family: 'MyriadPro-SemiBold', sans-serif;
   font-size: 20px;
 }
 
@@ -361,7 +361,7 @@ body.light-theme .high-score {
 }
 
 .replay-button {
-  font-family: 'MYRIADPRO-BOLD', sans-serif;
+  font-family: 'MyriadPro-SemiBold', sans-serif;
   font-size: 18px;
   color: white;
   background: linear-gradient(180deg, #4CAF50 0%, #45a049 100%);
@@ -385,7 +385,7 @@ body.light-theme .high-score {
 }
 
 .home-button {
-  font-family: 'MYRIADPRO-BOLD', sans-serif;
+  font-family: 'MyriadPro-SemiBold', sans-serif;
   font-size: 18px;
   color: white;
   background: linear-gradient(180deg, #ff6b35 0%, #e65a28 100%);

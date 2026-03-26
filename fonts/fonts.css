@@ -1,19 +1,15 @@
 @font-face {
-  font-family: 'MYRIADPRO-BOLD';
+  font-family: 'CentaurMTStd';
+  src: url('../../CentaurMTStd-Bold.ttf') format('truetype');
+  font-weight: bold;
   font-style: normal;
-  font-weight: 700;
   font-display: swap;
-  src: url('MYRIADPRO-BOLD.woff2') format('woff2'),
-       url('MYRIADPRO-BOLD.otf') format('opentype'),
-       url('myriadpro-bold.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'Colatin';
+  font-family: 'MyriadPro-SemiBold';
+  src: url('../../MYRIADPRO-SEMIBOLD.OTF') format('opentype');
+  font-weight: 600;
   font-style: normal;
-  font-weight: 400;
   font-display: swap;
-  src: url('Colatin.woff2') format('woff2'),
-       url('Colatin.otf') format('opentype'),
-       url('colatin_.ttf') format('truetype');
 }
