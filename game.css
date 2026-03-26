@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 html {
     margin: 0;
     padding: 0;
@@ -8,7 +6,7 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font-family:"Press Start 2P", cursive;
+    font-family:"MYRIADPRO-BOLD", sans-serif;
     text-align:center;
     transition: background 0.3s ease;
 }
@@ -23,14 +21,14 @@ body.light-theme {
     padding: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url('img/game_bg_dark.jpg');
+    background-image: url('img/game_bg_dark.jpeg');
     background-size: cover;
     background-position: center;
     transition: background-image 0.3s ease;
 }
 
 body.light-theme #board {
-    background-image: url('img/gamer_bg_light.png');
+    background-image: url('img/game_bg_light.jpeg');
 }
 
 /* ── SETTINGS BUTTON (TOP LEFT) ── */
@@ -122,7 +120,7 @@ body.light-theme .settings-panel {
 }
 
 .settings-title {
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'MYRIADPRO-BOLD', sans-serif;
     font-size: 16px;
     color: #ffd97a;
     text-align: center;
@@ -151,7 +149,7 @@ body.light-theme .setting-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'MYRIADPRO-BOLD', sans-serif;
     font-size: 11px;
     color: #ffd97a;
     cursor: pointer;
@@ -237,7 +235,7 @@ body.light-theme input:checked + .toggle-slider:before {
 }
 
 .close-settings-btn {
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'MYRIADPRO-BOLD', sans-serif;
     font-size: 11px;
     color: #3b1a00;
     background: linear-gradient(180deg, #ffd97a 0%, #f4a935 50%, #e08010 100%);
@@ -303,7 +301,7 @@ body.light-theme #game-over-overlay {
 }
 
 .new-high-score {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 18px;
   color: #FFD700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -329,7 +327,7 @@ body.light-theme .new-high-score {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 20px;
 }
 
@@ -363,7 +361,7 @@ body.light-theme .high-score {
 }
 
 .replay-button {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 18px;
   color: white;
   background: linear-gradient(180deg, #4CAF50 0%, #45a049 100%);
@@ -387,7 +385,7 @@ body.light-theme .high-score {
 }
 
 .home-button {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 18px;
   color: white;
   background: linear-gradient(180deg, #ff6b35 0%, #e65a28 100%);

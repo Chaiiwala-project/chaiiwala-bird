@@ -84,7 +84,7 @@ const characters = [
   { name: 'CHAI CUP', img: 'img/tea.png' },
   { name: 'BURGER',   img: 'img/burger.png' },
   { name: 'CHIPS',    img: 'img/chips.png' },
-  { name: 'SAMOSA',   img: 'img/samosa.png' },
+  { name: 'MASCOT',   img: 'img/mascot.png' },
 ];
 
 let current = 0;

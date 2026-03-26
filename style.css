@@ -1,7 +1,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Fredoka One', cursive;
+  font-family: 'Colatin', sans-serif;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -17,7 +17,7 @@ body.light-theme {
 #bg {
   position: fixed;
   inset: 0;
-  background-image: url('img/home_bg_dark.png');
+  background-image: url('img/home_bg_dark.jpg');
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
@@ -26,7 +26,7 @@ body.light-theme {
 }
 
 body.light-theme #bg {
-  background-image: url('img/home_bg_light.png');
+  background-image: url('img/home_bg_light.jpg');
 }
 
 /* Dark overlay so UI pops */
@@ -131,7 +131,7 @@ body.light-theme .settings-panel {
 }
 
 .settings-title {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 20px;
   color: #ffd97a;
   text-align: center;
@@ -160,7 +160,7 @@ body.light-theme .setting-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 12px;
   color: #ffd97a;
   cursor: pointer;
@@ -251,7 +251,7 @@ body.light-theme input:checked + .toggle-slider:before {
 }
 
 .close-settings-btn {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 12px;
   color: #3b1a00;
   background: linear-gradient(180deg, #ffd97a 0%, #f4a935 50%, #e08010 100%);
@@ -282,7 +282,7 @@ body.light-theme input:checked + .toggle-slider:before {
 }
 
 .start-btn {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: clamp(14px, 3vw, 22px);
   color: #3b1a00;
   background: linear-gradient(180deg, #ffd97a 0%, #f4a935 50%, #e08010 100%);
@@ -350,7 +350,7 @@ body.light-theme .char-modal {
 }
 
 .modal-title {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: clamp(10px, 2.5vw, 16px);
   color: #ffd97a;
   text-shadow: 0 2px 8px rgba(244,169,53,0.6);
@@ -438,7 +438,7 @@ body.light-theme .char-card {
 .char-card:hover .char-img-wrap { transform: scale(1.1) rotate(-5deg); }
 
 .char-name {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 9px;
   color: #ffd97a;
   text-align: center;
@@ -474,7 +474,7 @@ body.light-theme .dot.active { background: #7a3e00; }
 
 /* Confirm button */
 .confirm-btn {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: clamp(10px, 2vw, 14px);
   color: #3b1a00;
   background: linear-gradient(180deg, #ffd97a 0%, #f4a935 50%, #e08010 100%);
@@ -594,7 +594,7 @@ body.light-theme #name-overlay {
 .player-name-input {
   width: 100%;
   padding: 14px 18px;
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: clamp(10px, 2vw, 13px);
   color: #ffd97a;
   background: rgba(0, 0, 0, 0.3);
@@ -647,7 +647,7 @@ body.light-theme .player-name-input:focus {
 }
 
 .name-hint {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 8px;
   color: rgba(255, 217, 122, 0.5);
   text-align: center;
@@ -697,7 +697,7 @@ body.light-theme #leaderboard-overlay {
 .leaderboard-list::-webkit-scrollbar-thumb { background: #f4a935; border-radius: 3px; }
 
 .lb-loading {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 10px;
   color: rgba(255, 217, 122, 0.6);
   text-align: center;
@@ -767,14 +767,14 @@ body.light-theme .lb-row-me {
 }
 
 .lb-rank {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 13px;
   min-width: 36px;
   text-align: center;
 }
 
 .lb-name {
-  font-family: 'Fredoka One', cursive;
+  font-family: 'Colatin', sans-serif;
   font-size: 18px;
   color: #ffd97a;
   flex: 1;
@@ -794,7 +794,7 @@ body.light-theme .lb-name { color: #3d1800; }
 }
 
 .lb-score {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'MYRIADPRO-BOLD', sans-serif;
   font-size: 13px;
   color: #f4a935;
   min-width: 40px;
