@@ -347,7 +347,7 @@ function detectCollision(a, b) {
 
 async function submitScore(name, score) {
   try {
-    await fetch(`${API_BASE}/submit-score`, {
+    await fetch(`${API_BASE}/submit_score`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, score })
