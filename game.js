@@ -128,6 +128,66 @@ function drawStores() {
   });
 }
 
+
+
+// ── SCREEN SHAKE ──────────────────────────────────────────────────────────────
+let shakeFrames = 0;
+let shakeMagnitude = 0;
+
+function triggerShake(frames = 12, magnitude = 8) {
+  shakeFrames = frames;
+  shakeMagnitude = magnitude;
+}
+
+function applyShake() {
+  if (shakeFrames <= 0) return;
+  const dx = (Math.random() - 0.5) * shakeMagnitude;
+  const dy = (Math.random() - 0.5) * shakeMagnitude;
+  context.translate(dx, dy);
+  shakeFrames--;
+  shakeMagnitude *= 0.85; // decay
+}
+
+// ── MILESTONE MESSAGES ────────────────────────────────────────────────────────
+const MILESTONES = {
+  10: '🔥 HEATING UP!',
+  25: '💀 BEAST MODE!',
+  50: '🏆 LEGENDARY!',
+  100: '☕ CHAI GOD!',
+};
+
+let milestoneMsg = '';
+let milestoneTimer = 0;
+
+function checkMilestone(score) {
+  const s = Math.floor(score);
+  if (MILESTONES[s] && milestoneMsg !== MILESTONES[s]) {
+    milestoneMsg = MILESTONES[s];
+    milestoneTimer = 120; // frames (~2 seconds)
+  }
+}
+
+function drawMilestone() {
+  if (milestoneTimer <= 0) return;
+  const alpha = Math.min(1, milestoneTimer / 30); // fade out last 30 frames
+  const scale = milestoneTimer > 90 ? 1 + (120 - milestoneTimer) * 0.02 : 1; // pop in
+  context.save();
+  context.globalAlpha = alpha;
+  context.font = `bold ${Math.round(36 * scale)}px Arial`;
+  context.textAlign = 'center';
+  context.fillStyle = '#FFD700';
+  context.shadowColor = 'rgba(0,0,0,0.8)';
+  context.shadowBlur = 10;
+  context.fillText(milestoneMsg, board.width / 2, board.height / 3);
+  context.restore();
+  milestoneTimer--;
+}
+
+// ── HAPTIC FEEDBACK ───────────────────────────────────────────────────────────
+function haptic(pattern = [30]) {
+  if (navigator.vibrate) navigator.vibrate(pattern);
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 let birdx, birdy;
@@ -245,13 +305,18 @@ function update() {
   requestAnimationFrame(update);
   context.clearRect(0, 0, board.width, board.height);
 
-  // Draw background — guard against broken image
+  // Screen shake
+  context.save();
+  applyShake();
+
+  // Draw background
   const bg = settings.theme === 'light' ? bgImgLight : bgImgDark;
   if (bg.complete && bg.naturalWidth !== 0) {
     context.drawImage(bg, 0, 0, board.width, board.height);
   }
 
   drawStores();
+  
 
   // Apply difficulty
   const diff = getDifficulty(score);
@@ -270,9 +335,23 @@ function update() {
     velocityY += gravity;
     bird.y = Math.max(bird.y + velocityY, 0);
   }
-  context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
-  if (bird.y + bird.height >= board.height) gameOver = true;
+  // ── Bird tilt ──
+  const tiltAngle = Math.min(Math.max(velocityY * 3, -25), 70); // degrees
+  const rad = tiltAngle * Math.PI / 180;
+  const cx = bird.x + bird.width / 2;
+  const cy = bird.y + bird.height / 2;
+  context.save();
+  context.translate(cx, cy);
+  context.rotate(rad);
+  context.drawImage(birdImg, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
+  context.restore();
+
+  if (bird.y + bird.height >= board.height) {
+    gameOver = true;
+    triggerShake(15, 10);
+    haptic([50, 30, 50]);
+  }
 
   for (let i = 0; i < handarray.length; i++) {
     const hand = handarray[i];
@@ -282,9 +361,14 @@ function update() {
     if (!hand.passed && hand.x + POLE_W < bird.x) {
       score += 0.5;
       hand.passed = true;
+      checkMilestone(score);
     }
 
-    if (detectCollision(bird, hand)) gameOver = true;
+    if (detectCollision(bird, hand)) {
+      gameOver = true;
+      triggerShake(15, 10);
+      haptic([50, 30, 50]);
+    }
   }
 
   while (handarray.length > 0 && handarray[0].x < -POLE_W) {
@@ -303,6 +387,8 @@ function update() {
   context.textAlign = "right";
   context.fillText("Best: " + highScore, board.width - 20, 45);
 
+  drawMilestone();
+
   if (!gameStarted) {
     context.fillStyle = "rgba(0, 0, 0, 0.45)";
     context.fillRect(0, 0, board.width, board.height);
@@ -311,6 +397,8 @@ function update() {
     context.textAlign = "center";
     context.fillText("TAP TO START", board.width / 2, board.height / 2);
   }
+
+  context.restore(); // restore shake transform
 }
 
 function placehand() {
@@ -338,9 +426,9 @@ function placehand() {
 function detectCollision(a, b) {
   const bp = 12, hp = 5;
   return (
-    a.x + bp          < b.x + b.width  - hp &&
+    a.x + bp           < b.x + b.width  - hp &&
     a.x + a.width - bp > b.x            + hp &&
-    a.y + bp          < b.y + b.height  - hp &&
+    a.y + bp           < b.y + b.height  - hp &&
     a.y + a.height - bp > b.y            + hp
   );
 }
@@ -369,6 +457,10 @@ function resetGame() {
   openingspace = GAP_START;
   gravity = GRAVITY_START;
   lastSpawnInterval = SPAWN_START;
+  shakeFrames = 0;
+  shakeMagnitude = 0;
+  milestoneMsg = '';
+  milestoneTimer = 0;
   clearInterval(handInterval);
   handInterval = null;
   if (storesReady) initStoreStrip();
@@ -399,6 +491,7 @@ function goHome() {
 function handleTouch(e) {
   e.preventDefault();
   if (gameOver) return;
+  haptic([30]);
   if (!gameStarted) {
     gameStarted = true;
     lastSpawnInterval = SPAWN_START;
