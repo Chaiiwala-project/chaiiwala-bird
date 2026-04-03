@@ -69,7 +69,7 @@ const STORE_IMAGES = [
 ];
 
 const STORE_HEIGHT_RATIO = 0.45;
-const STORE_GAP = 20;
+const STORE_GAP = 10;
 const STORE_SPEED_MULT = 0.5;
 
 let storeImgs = [];
