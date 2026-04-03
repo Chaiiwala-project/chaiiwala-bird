@@ -173,7 +173,7 @@ function drawMilestone() {
   const scale = milestoneTimer > 90 ? 1 + (120 - milestoneTimer) * 0.02 : 1; // pop in
   context.save();
   context.globalAlpha = alpha;
-  context.font = `bold ${Math.round(36 * scale)}px Arial`;
+  context.font = `bold ${Math.round(36 * scale)}px MyriadPro`;
   context.textAlign = 'center';
   context.fillStyle = '#FFD700';
   context.shadowColor = 'rgba(0,0,0,0.8)';
@@ -242,6 +242,23 @@ tophandImg.src = "img/pole_down.png";
 
 let bottomhandImg = new Image();
 bottomhandImg.src = "img/pole_up.png";
+
+let topHandHalfImg = new Image();
+topHandHalfImg.src = "img/pole_down_half.png";
+
+let topHandTopImg = new Image();
+topHandTopImg.src = "img/pole_down_top.png";
+
+let botHandHalfImg = new Image();
+botHandHalfImg.src = "img/pole_up_half.png";
+
+let botHandTopImg = new Image();
+botHandTopImg.src = "img/pole_up_top.png";
+
+function getTopperH(img) {
+  if (!img.naturalWidth || !img.naturalHeight) return 150;
+  return Math.round(POLE_W * img.naturalHeight / img.naturalWidth);
+}
 
 let score = 0;
 let highScore = 0;
@@ -356,7 +373,21 @@ function update() {
   for (let i = 0; i < handarray.length; i++) {
     const hand = handarray[i];
     hand.x += handSpeed;
-    context.drawImage(hand.img, hand.x, hand.y, POLE_W, hand.height);
+    if (hand.isTop) {
+      const topperH = Math.min(getTopperH(topHandTopImg), hand.height);
+      const shaftH  = hand.height - topperH;
+      if (shaftH > 0) {
+        context.drawImage(topHandHalfImg, hand.x, hand.y, POLE_W, shaftH);
+      }
+      context.drawImage(topHandTopImg, hand.x, hand.y + shaftH, POLE_W, topperH);
+    } else {
+      const topperH = Math.min(getTopperH(botHandTopImg), hand.height);
+      const shaftH  = hand.height - topperH;
+      context.drawImage(botHandTopImg, hand.x, hand.y, POLE_W, topperH);
+      if (shaftH > 0) {
+        context.drawImage(botHandHalfImg, hand.x, hand.y + topperH, POLE_W, shaftH);
+      }
+    }
 
     if (!hand.passed && hand.x + POLE_W < bird.x) {
       score += 0.5;
@@ -378,12 +409,12 @@ function update() {
   // HUD
   const isLight = settings.theme === 'light';
   context.fillStyle = isLight ? "#1a1a2e" : "white";
-  context.font = "bold 30px Arial";
+  context.font = "bold 30px MyriadPro";
   context.textAlign = "left";
   context.fillText("Score: " + Math.floor(score), 20, 50);
 
   context.fillStyle = isLight ? "#b8860b" : "#FFD700";
-  context.font = "bold 24px Arial";
+  context.font = "bold 24px MyriadPro";
   context.textAlign = "right";
   context.fillText("Best: " + highScore, board.width - 20, 45);
 
@@ -393,7 +424,7 @@ function update() {
     context.fillStyle = "rgba(0, 0, 0, 0.45)";
     context.fillRect(0, 0, board.width, board.height);
     context.fillStyle = "white";
-    context.font = "bold 32px Arial";
+    context.font = "bold 32px MyriadPro";
     context.textAlign = "center";
     context.fillText("TAP TO START", board.width / 2, board.height / 2);
   }
@@ -401,8 +432,9 @@ function update() {
   context.restore(); // restore shake transform
 }
 
-function placehand() {
+function placehand(startX) {
   if (gameOver) return;
+  const x = (typeof startX === 'number') ? startX : board.width;
 
   const minOpeningY = 120;
   const maxOpeningY = board.height - openingspace - 120;
@@ -410,14 +442,14 @@ function placehand() {
 
   handarray.push({
     img: tophandImg,
-    x: board.width, y: 0,
+    x, y: 0,
     width: POLE_W, height: openingY,
     isTop: true, passed: false,
   });
 
   handarray.push({
     img: bottomhandImg,
-    x: board.width, y: openingY + openingspace,
+    x, y: openingY + openingspace,
     width: POLE_W, height: board.height - (openingY + openingspace),
     isTop: false, passed: false,
   });
@@ -476,6 +508,8 @@ function handleKey(e) {
     if (!gameStarted) {
       gameStarted = true;
       lastSpawnInterval = SPAWN_START;
+      placehand(board.width * 0.55);
+      placehand(board.width);
       handInterval = setInterval(placehand, SPAWN_START);
       document.getElementById('settings-btn').style.display = 'none';
     }
@@ -495,6 +529,8 @@ function handleTouch(e) {
   if (!gameStarted) {
     gameStarted = true;
     lastSpawnInterval = SPAWN_START;
+    placehand(board.width * 0.55);
+    placehand(board.width);
     handInterval = setInterval(placehand, SPAWN_START);
     document.getElementById('settings-btn').style.display = 'none';
   }

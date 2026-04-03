@@ -3,7 +3,7 @@ html { margin: 0; padding: 0; }
 body {
     margin: 0;
     padding: 0;
-    font-family: 'MyriadPro-SemiBold', sans-serif;
+    font-family: 'MyriadPro', sans-serif;
     text-align: center;
     background: #0a0a0a;
     transition: background 0.3s ease;
@@ -82,7 +82,7 @@ body.light-theme .settings-panel {
 }
 
 .settings-title {
-    font-family: 'MyriadPro-SemiBold', sans-serif;
+    font-family: 'MyriadPro', sans-serif;
     font-size: 16px;
     color: #ffffff;
     text-align: center;
@@ -108,7 +108,7 @@ body.light-theme .setting-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'MyriadPro-SemiBold', sans-serif;
+    font-family: 'MyriadPro', sans-serif;
     font-size: 11px;
     color: #ffffff;
     cursor: pointer;
@@ -161,7 +161,7 @@ body.light-theme input:checked + .toggle-slider { background-color: rgba(0,0,0,0
 input:checked + .toggle-slider:before { transform: translateX(24px); }
 
 .close-settings-btn {
-    font-family: 'MyriadPro-SemiBold', sans-serif;
+    font-family: 'MyriadPro', sans-serif;
     font-size: 11px;
     color: #000000;
     background: #ffffff;
@@ -225,7 +225,7 @@ body.light-theme #game-over-overlay {
 }
 
 .new-high-score {
-    font-family: 'MyriadPro-SemiBold', sans-serif;
+    font-family: 'MyriadPro', sans-serif;
     font-size: 18px;
     color: #ff6b35;
     text-shadow: 0 2px 8px rgba(0,0,0,0.5);
@@ -245,7 +245,7 @@ body.light-theme #game-over-overlay {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    font-family: 'MyriadPro-SemiBold', sans-serif;
+    font-family: 'MyriadPro', sans-serif;
     font-size: 20px;
 }
 
@@ -269,7 +269,7 @@ body.light-theme .high-score {
 }
 
 .replay-button {
-    font-family: 'MyriadPro-SemiBold', sans-serif;
+    font-family: 'MyriadPro', sans-serif;
     font-size: 18px;
     color: #ffffff;
     background: #ff6b35;
@@ -285,7 +285,7 @@ body.light-theme .high-score {
 .replay-button:active { transform: translateY(6px); box-shadow: 0 0 0 #cc4a1a; }
 
 .home-button {
-    font-family: 'MyriadPro-SemiBold', sans-serif;
+    font-family: 'MyriadPro', sans-serif;
     font-size: 18px;
     color: #000000;
     background: #ffffff;

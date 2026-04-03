@@ -1,15 +1,7 @@
 @font-face {
-  font-family: 'CentaurMTStd';
-  src: url('../../CentaurMTStd-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'MyriadPro-SemiBold';
-  src: url('../../MYRIADPRO-SEMIBOLD.OTF') format('opentype');
-  font-weight: 600;
+  font-family: 'MyriadPro';
+  src: url('MYRIADPRO-REGULAR.otf') format('opentype');
+  font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
