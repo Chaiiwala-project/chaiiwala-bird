@@ -79,8 +79,8 @@ window.addEventListener('DOMContentLoaded', () => {
 // ── CHARACTER SELECT ─────────────────────────────────────────────────────────
 
 const characters = [
-  { name: 'CHAI CUP', img: 'img/tea.png' },
-  { name: 'MASCOT',   img: 'img/mascot.png' },
+  { name: 'CHAI GLIDER', img: 'img/tea.png' },
+  { name: 'KARAK WALKER',   img: 'img/mascot.png' },
 ];
 
 let current = 0;
