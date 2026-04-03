@@ -38,7 +38,6 @@ function toggleTheme() {
 // ── NAME ENTRY ──────────────────────────────────────────────────────────────
 
 function openNameEntry() {
-  // If already has a name saved, skip straight to char select
   const savedName = localStorage.getItem('playerName');
   if (savedName) {
     sessionStorage.setItem('playerName', savedName);
@@ -65,10 +64,9 @@ function confirmName() {
   openCharSelect();
 }
 
-// Allow Enter key to confirm name
 window.addEventListener('DOMContentLoaded', () => {
   loadSettings();
-  buildDots();
+  buildCharGrid();
 
   const nameInput = document.getElementById('player-name-input');
   if (nameInput) {
@@ -82,47 +80,32 @@ window.addEventListener('DOMContentLoaded', () => {
 
 const characters = [
   { name: 'CHAI CUP', img: 'img/tea.png' },
-  { name: 'BURGER',   img: 'img/burger.png' },
-  { name: 'CHIPS',    img: 'img/chips.png' },
   { name: 'MASCOT',   img: 'img/mascot.png' },
 ];
 
 let current = 0;
 
-function buildDots() {
-  const dots = document.getElementById('dots');
-  if (!dots) return;
-  dots.innerHTML = characters.map((_, i) =>
-    `<div class="dot ${i === current ? 'active' : ''}" id="dot-${i}"></div>`
-  ).join('');
+function buildCharGrid() {
+  const grid = document.getElementById('char-grid');
+  if (!grid) return;
+
+  grid.innerHTML = characters.map((char, i) => `
+    <div class="char-tile ${i === current ? 'selected' : ''}" onclick="selectChar(${i})">
+      <img src="${char.img}" alt="${char.name}" class="char-tile-img">
+      <div class="char-tile-name">${char.name}</div>
+    </div>
+  `).join('');
 }
 
-function updateChar() {
-  const imgEl  = document.getElementById('char-img');
-  const nameEl = document.getElementById('char-name');
-  imgEl.style.animation = 'none';
-  imgEl.offsetHeight;
-  imgEl.style.animation = '';
-  imgEl.src = characters[current].img;
-  nameEl.textContent = characters[current].name;
-  document.querySelectorAll('.dot').forEach((d, i) => {
-    d.classList.toggle('active', i === current);
+function selectChar(index) {
+  current = index;
+  document.querySelectorAll('.char-tile').forEach((tile, i) => {
+    tile.classList.toggle('selected', i === current);
   });
 }
 
-function prevChar() {
-  current = (current - 1 + characters.length) % characters.length;
-  updateChar();
-}
-
-function nextChar() {
-  current = (current + 1) % characters.length;
-  updateChar();
-}
-
 function openCharSelect() {
-  buildDots();
-  updateChar();
+  buildCharGrid();
   document.getElementById('char-overlay').classList.add('active');
 }
 
